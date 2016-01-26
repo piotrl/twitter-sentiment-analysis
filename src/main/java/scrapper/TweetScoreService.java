@@ -77,6 +77,7 @@ public class TweetScoreService {
         String content = tweet.getTweet();
         List<String> wordList = Arrays.asList(content.split(" "));
         TweetScore score = wordList.stream()
+                .filter(word -> word.length() > 3)
                 .map(this::classifiedSemantic)
                 .filter(Optional::isPresent)
                 .map(Optional::get)

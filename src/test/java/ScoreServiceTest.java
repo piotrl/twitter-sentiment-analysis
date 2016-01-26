@@ -9,6 +9,7 @@ import words.WordDatabase;
 import words.WordSemantic;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,6 +25,7 @@ public class ScoreServiceTest {
     public void init() {
         WordDatabase wordDatabase = new WordDatabase();
         this.semantics = wordDatabase.importDb();
+        Collections.shuffle(this.semantics);
         service = new TweetScoreService(this.semantics);
     }
 
@@ -80,9 +82,12 @@ public class ScoreServiceTest {
                 .filter(score -> score.getEmotion() != UNCLASSIFIED)
                 .collect(toList());
 
-        System.out.println("Summary");
+        System.out.println("Summary: " + partyName);
+        System.out.println("Tweets: " + scores.size());
+        System.out.println("Classified Tweets: " + classifiedTweets.size());
         System.out.println("Unclassified tweets: " + (scores.size() - classifiedTweets.size()));
-        printSummary(classifiedTweets);
+        System.out.println("% classified: " + classifiedTweets.size() / (1.0 * scores.size()));
+        printSummary(scores);
     }
 
     private List<TweetScore> getTweetScores(List<Tweet> pisTweets) {
@@ -126,11 +131,11 @@ public class ScoreServiceTest {
                     }
                 });
 
-        System.out.println("HAPPINESS: " + (happy.get() / size) + "%");
-        System.out.println("ANGER: " + (anger.get() / size) + "%");
-        System.out.println("SADNESS: " + (sadness.get() / size) + "%");
-        System.out.println("FEAR: " + (fear.get() / size) + "%");
-        System.out.println("DISGUST: " + (disgust.get() / size) + "%");
-        System.out.println("NEUTRAL: " + (neutral.get() / size) + "%");
+        System.out.println("HAPPINESS: " + (happy.get() / size) * 100 + "%");
+        System.out.println("ANGER: " + (anger.get() / size) * 100 + "%");
+        System.out.println("SADNESS: " + (sadness.get() / size) * 100 + "%");
+        System.out.println("FEAR: " + (fear.get() / size) * 100 + "%");
+        System.out.println("DISGUST: " + (disgust.get() / size) * 100 + "%");
+        System.out.println("NEUTRAL: " + (neutral.get() / size) * 100 + "%");
     }
 }
